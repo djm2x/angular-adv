@@ -1,0 +1,118 @@
+name: libraryComFront
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  APP_NAME: library-com-front
+  DOMAINE_NAME: library
+  APP_PORT: 4205
+  NODE_VERSION: 14
+  DOCKER_HUB_REPO: djm2x
+  DOCKER_HUB_USER: djm2x
+  DOCKER_HUB_PW: "digitransform01"
+
+  SERVER_NAME: vmi633563.contaboserver.net
+  SERVER_HOST: 194.163.148.222
+  SERVER_USER: root
+  SERVER_PW: ninaNINA01
+
+jobs:
+  create-repo-dockerhub:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create DockerHub Repo
+      shell: bash
+      run: |
+        TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "${{env.DOCKER_HUB_USER}}", "password": "${{env.DOCKER_HUB_PW}}"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+        curl -s -H "Authorization: JWT ${TOKEN}" "https://hub.docker.com/v2/repositories/" \
+        --data 'description=${{env.APP_NAME}}' \
+        --data 'full_description=${{env.APP_NAME}}' \
+        --data 'is_private=false' \
+        --data 'name=${{env.APP_NAME}}' \
+        --data "namespace=digitransform"
+
+  build-front:
+    needs: [create-repo-dockerhub]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js '${{env.NODE_VERSION}}'
+      uses: actions/setup-node@v2
+      with:
+        node-version: '${{env.NODE_VERSION}}'
+      # cache: "npm"
+
+    - name : Cache
+      uses: actions/cache@v2
+      with:
+        path: "node_modules"
+        key: node-modules-${{ hashFiles('package.json') }}
+
+    - run: npm ci
+
+    - run: npm run prod --if-present
+
+    - uses: mr-smithers-excellent/docker-build-push@v5
+      name: Build & push Docker image
+      with:
+          image: ${{env.DOCKER_HUB_REPO}}/${{env.APP_NAME}}
+          tags: latest
+          # tags: ${{ github.run_number }}, latest
+          registry: docker.io
+          dockerfile: ./Dockerfile
+          username: ${{env.DOCKER_HUB_USER}}
+          password: ${{env.DOCKER_HUB_PW}}
+
+  deploy:
+    needs: [build-front]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Server ${{env.SERVER_NAME}}
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{env.SERVER_HOST}}
+          username: ${{env.SERVER_USER}}
+          password: ${{env.SERVER_PW}}
+
+          script: |
+            # remove container and his image
+            sudo docker  rm --force ${{env.APP_NAME}}
+            sudo docker rmi --force ${{env.DOCKER_HUB_REPO}}/${{env.APP_NAME}}:latest
+
+            # Free up space
+            sudo docker system pr une -a
+
+            #run
+            # sudo docker run -d --name ${{env.APP_NAME}} --restart=unless-stopped -p ${{env.APP_PORT}}:${{env.APP_PORT}} ${{env.DOCKER_HUB_REPO}}/${{env.APP_NAME}}:latest
+
+            sudo docker run -d \
+            --restart unless-stopped \
+            --network proxy \
+            --label traefik.enable=true \
+            --label traefik.http.routers.${{env.APP_NAME}}.tls=true \
+            --label traefik.http.routers.${{env.APP_NAME}}.tls.certresolver=letsencrypt \
+            --label traefik.http.routers.${{env.APP_NAME}}.rule="Host(\`${{env.DOMAINE_NAME}}.mohamed-mourabit.com\`)" \
+            --label traefik.http.services.${{env.APP_NAME}}.loadbalancer.server.port=${{env.APP_PORT}} \
+            --name ${{env.APP_NAME}} \
+            djm2x/${{env.APP_NAME}}:latest
+
+  delete-repo-dockerhub:
+    needs: [deploy]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete DockerHub Repo
+        shell: bash
+        run: |
+          TOKEN=$(curl -s -H "Content-Type: application/json" -X POST -d '{"username": "${{env.DOCKER_HUB_USER}}", "password": "${{env.DOCKER_HUB_PW}}"}' https://hub.docker.com/v2/users/login/ | jq -r .token)
+
+          sudo curl -i -X DELETE \
+          -H "Accept: application/json" \
+          -H "Authorization: JWT $TOKEN" \
+          https://hub.docker.com/v2/repositories/${{env.DOCKER_HUB_REPO}}/${{env.APP_NAME}}/

@@ -1,0 +1,66 @@
+name: angularTest
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  APP_NAME: angular-test
+  DOMAINE: mohamed-mourabit.com
+  DOMAINE_PREFIX: ''
+  SUB_DOMAINE: angular
+  APP_PORT: 4000
+
+  SERVER_NAME: vmi633563.contaboserver.net
+  SERVER_HOST: 194.163.148.222
+  SERVER_USER: root
+  SERVER_PW: ninaNINA01
+  GIT_REPO: ${{ github.repository }}
+  BRANCH: ${{ github.ref_name }}
+  GITHUB_CONTEXT: ${{ toJson(github) }}
+  TOKEN: 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
+
+jobs:
+  deploy:
+    name: ssh & docker build image/run
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display some info
+        run: |
+          echo build from https://${{env.TOKEN}}@github.com/${{env.GIT_REPO}}.git#${{env.BRANCH}}
+      - name: "ssh to ${{env.SERVER_NAME}}"
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{env.SERVER_HOST}}
+          username: ${{env.SERVER_USER}}
+          password: ${{env.SERVER_PW}}
+
+          script: |
+            # remove container
+            sudo docker  rm --force ${{env.APP_NAME}}
+
+            # remove image
+            sudo docker rmi --force ${{env.APP_NAME}}
+
+            # build image from repo url
+            sudo docker build -t ${{env.APP_NAME}} https://${{env.TOKEN}}@github.com/${{env.GIT_REPO}}.git#${{env.BRANCH}}
+
+            #run container from images & set labels configuration for traefik
+            # sudo docker run -d --name ${{env.APP_NAME}} --restart=unless-stopped -p ${{env.APP_PORT}}:${{env.APP_PORT}} ${{env.APP_NAME}}
+
+            # sudo docker run -d \
+            # --restart unless-stopped \
+            # --network proxy \
+            # --volume ${{env.APP_NAME}}-vol:/wwwroot \
+            # --label traefik.enable=true \
+            # --label traefik.http.routers.${{env.APP_NAME}}.tls=true \
+            # --label traefik.http.routers.${{env.APP_NAME}}.tls.certresolver=letsencrypt \
+            # --label traefik.http.routers.${{env.APP_NAME}}.rule="Host(\`${{env.SUB_DOMAINE}}.${{env.DOMAINE}}\`) && PathPrefix(\`/${{env.DOMAINE_PREFIX}}\`)" \
+            # --label traefik.http.services.${{env.APP_NAME}}.loadbalancer.server.port=${{env.APP_PORT}} \
+            # --name ${{env.APP_NAME}} \
+            # ${{env.APP_NAME}}
+
+            # Free up space (--all unused images)
+            sudo docker system prune --all --force
