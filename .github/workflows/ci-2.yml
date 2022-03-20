@@ -1,4 +1,4 @@
-name: angularTest
+name: angularAdv
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 env:
-  APP_NAME: angular-test
+  APP_NAME: angular-adv
   DOMAINE: mohamed-mourabit.com
   DOMAINE_PREFIX: ''
   SUB_DOMAINE: angular

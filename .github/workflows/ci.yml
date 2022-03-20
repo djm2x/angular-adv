@@ -2,9 +2,9 @@ name: libraryComFront
 
 on:
   push:
-    branches: [main]
+    branches: [-main]
   pull_request:
-    branches: [main]
+    branches: [-main]
 
 env:
   APP_NAME: library-com-front
