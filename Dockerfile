@@ -17,4 +17,4 @@ COPY --from=build-env /app/dist ./
 EXPOSE 4000
 
 # Serve the app
-CMD ["node", "dist/angular-test/server/main.js"]
+CMD ["node", "app/dist/angular-test/server/main.js"]
