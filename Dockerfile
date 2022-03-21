@@ -10,7 +10,7 @@ RUN npm run build:ssr
 FROM node:16-alpine3.14
 
 WORKDIR /app
-RUN /dist
+RUN mkdir -p /dist
 # Copy dependency definitions
 # COPY --from=build-env /app/package.json .
 RUN ls -al
