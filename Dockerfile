@@ -11,12 +11,10 @@ FROM node:16-alpine3.14
 
 WORKDIR /app
 RUN mkdir -p /dist
+RUN mkdir -p /node_modules
 # Copy dependency definitions
-# COPY --from=build-env /app/package.json .
-RUN ls -al
 COPY --from=build-env /app/dist dist
-COPY --from=build-env /app/node_modules .
-RUN ls -al
+COPY --from=build-env /app/node_modules node_modules
 
 # Expose the port the app runs in
 EXPOSE 4000
