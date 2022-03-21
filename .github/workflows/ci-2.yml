@@ -63,4 +63,4 @@ jobs:
             # ${{env.APP_NAME}}
 
             # Free up space (--all unused images)
-            sudo docker system prune --all --force
+            # sudo docker system prune --all --force
