@@ -10,15 +10,16 @@ RUN npm run build:ssr
 FROM node:16-alpine3.14
 
 WORKDIR /app
+RUN /dist
 # Copy dependency definitions
 # COPY --from=build-env /app/package.json .
-# COPY --from=build-env /app/node_modules .
 RUN ls -al
-COPY --from=build-env /app/dist .
+COPY --from=build-env /app/dist dist
+COPY --from=build-env /app/node_modules .
 RUN ls -al
 
 # Expose the port the app runs in
 EXPOSE 4000
 
 # Serve the app
-CMD ["node", "angular-test/server/main.js"]
+CMD ["node", "dist/angular-test/server/main.js"]
