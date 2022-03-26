@@ -32,7 +32,7 @@ pipeline {
 
           sudo docker rmi --force ${env.APP_NAME}
 
-          sudo docker build -t ${env.APP_NAME} https://${env.TOKEN} @github.com/${env.GIT_REPO} .git#${env.BRANCH}
+          sudo docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}
 
           sudo docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}
         '''
