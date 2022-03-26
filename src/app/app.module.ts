@@ -7,6 +7,7 @@ import { OneComponent } from './one/one.component';
 import { TwoComponent } from './two/two.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { environment } from '../environments/environment';
     TwoComponent
   ],
   imports: [
+    HttpClientModule,
     BrowserModule.withServerTransition({ appId: 'serverApp' }),
     AppRoutingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {

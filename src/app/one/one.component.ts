@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OneComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
+    const api = 'https://api.github.com';
+
+    const url = 'repos/elabdellah/TransNow_API_Authentication/actions/runs'
+    this.http.get<any[]>(`${api}/${url}`).subscribe(r => {
+      console.log(r);
+    });
   }
 
 }
