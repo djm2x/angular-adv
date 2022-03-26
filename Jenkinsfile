@@ -9,33 +9,18 @@ pipeline {
       SUB_DOMAINE = 'angular'
       APP_PORT = '4000'
 
-      GIT_REPO = 'djm2x/angular-adv.git'
+      GIT_REPO = 'djm2x/angular-adv'
       BRANCH = 'main'
       TOKEN = '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'
   }
   stages {
-    // stage('Maven Install') {
-    //   agent {
-    //     docker {
-    //       image 'maven:3.5.0'
-    //     }
-    //   }
-    //   steps {
-    //     sh 'mvn clean install'
-    //   }
-    // }
     stage('Docker Build') {
       agent any
       steps {
-        sh '''
-          sudo docker rm --force ${env.APP_NAME}
-
-          sudo docker rmi --force ${env.APP_NAME}
-
-          sudo docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}
-
-          sudo docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}
-        '''
+        sh "sudo docker rm --force ${env.APP_NAME}"
+        sh "sudo docker rmi --force ${env.APP_NAME}"
+        sh "sudo docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}"
+        sh "sudo docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}"
       }
     }
   }
