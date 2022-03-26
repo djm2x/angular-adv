@@ -17,10 +17,10 @@ pipeline {
     stage('Docker Build') {
       agent any
       steps {
-        sh "sudo docker rm --force ${env.APP_NAME}"
-        sh "sudo docker rmi --force ${env.APP_NAME}"
-        sh "sudo docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}"
-        sh "sudo docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}"
+        sh "docker rm --force ${env.APP_NAME}"
+        sh "docker rmi --force ${env.APP_NAME}"
+        sh "docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}"
+        sh "docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}"
       }
     }
   }
