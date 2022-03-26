@@ -11,7 +11,7 @@ pipeline {
 
       GIT_REPO = 'djm2x/angular-adv.git'
       BRANCH = 'main'
-      TOKEN = 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
+      TOKEN = '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'
   }
   stages {
     // stage('Maven Install') {
