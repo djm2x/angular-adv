@@ -11,30 +11,21 @@ pipeline {
 
       GIT_REPO = 'djm2x/angular-adv'
       BRANCH = 'main'
-      TOKEN = 'github-token'
+      TOKEN = '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'
   }
-  node {
+  stages {
+    stage('Docker Build') {
+      node {
+        def app
     stage('Cloning Git') {
-      // steps {
-      //   git([url: "https://github.com/${env.GIT_REPO}.git", branch: "${env.BRANCH}", credentialsId: "${env.TOKEN}"])
-
-      // }
       checkout scm
     }
     stage('Building image') {
-      steps{
-          checkout scm
-          def customImage = docker.build("my-image:${env.BUILD_ID}")
-          dockerImage = docker.build imagename
-      }
+      app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
-    stage('Docker Build') {
-      agent any
-      steps {
-        sh "docker rm --force ${env.APP_NAME}"
-        sh "docker rmi --force ${env.APP_NAME}"
-        sh "docker build -t ${env.APP_NAME} https://${env.TOKEN}@github.com/${env.GIT_REPO}.git#${env.BRANCH}"
-        sh "docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}"
+    stage('Docker Run') {
+      app.withRun("docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv")
+    }
       }
     }
   }
