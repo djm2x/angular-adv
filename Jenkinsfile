@@ -12,7 +12,7 @@ pipeline {
       DOCKER_FILE_NAME = 'Dockerfile.tiny'
       TOKEN = 'github-token'
   }
-  node {
+  stages {
     def app
     stage('Cloning Git') {
       checkout scm
