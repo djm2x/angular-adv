@@ -18,14 +18,14 @@ node {
     }
 
     stage('Building image') {
-      app = docker.build("angular-adv", "-f ${DOCKER_FILE_NAME} ./")
+      app = docker.build("${APP_NAME}", "-f ${DOCKER_FILE_NAME} ./")
 
       // sh "echo ${app}"
     }
 
     stage('Docker Run') {
       sh "docker rm --force ${APP_NAME}"
-      sh "docker rmi --force ${APP_NAME}"
+      // sh "docker rmi --force ${APP_NAME}"
       // sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
 
       sh """docker run -d \
