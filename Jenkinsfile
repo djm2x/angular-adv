@@ -24,20 +24,20 @@ node {
     }
 
     stage('Docker Run') {
-      sh "docker rm --force ${env.APP_NAME}"
-      sh "docker rmi --force ${env.APP_NAME}"
+      sh "docker rm --force ${APP_NAME}"
+      sh "docker rmi --force ${APP_NAME}"
       // sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
 
       sh """docker run -d \
       --restart unless-stopped \
       --network proxy \
       --label traefik.enable=true \
-      --label traefik.http.routers.${env.APP_NAME}.tls=true \
-      --label traefik.http.routers.${env.APP_NAME}.tls.certresolver=letsencrypt \
-      --label traefik.http.routers.${env.APP_NAME}.rule="Host(`"${env.SUB_DOMAINE}"."${env.DOMAINE}"`)" \
-      --label traefik.http.services.${env.APP_NAME}.loadbalancer.server.port=${env.APP_PORT} \
-      --name ${env.APP_NAME} \
-      ${env.APP_NAME}"""
+      --label traefik.http.routers.${APP_NAME}.tls=true \
+      --label traefik.http.routers.${APP_NAME}.tls.certresolver=letsencrypt \
+      --label traefik.http.routers.${APP_NAME}.rule="Host(`"${SUB_DOMAINE}"."${DOMAINE}"`)" \
+      --label traefik.http.services.${APP_NAME}.loadbalancer.server.port=${APP_PORT} \
+      --name ${APP_NAME} \
+      ${APP_NAME}"""
     }
 }
 
