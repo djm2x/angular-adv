@@ -21,7 +21,9 @@ node {
       app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      app.withRun("--name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv")
+      // app.withRun("--name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv")
+
+      sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
     }
 }
 
