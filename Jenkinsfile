@@ -1,5 +1,5 @@
 node {
-  environment {
+  env {
       APP_NAME = 'angular-adv'
       DOMAINE = 'mohamed-mourabit.com'
       DOMAINE_PREFIX = ''
@@ -21,8 +21,7 @@ node {
       app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      // app.withRun("--name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv")
-
+      sh "${env.APP_NAME}"
       sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
     }
 }
