@@ -23,8 +23,11 @@ pipeline {
     // }
     stage('Building image') {
       steps{
-          checkout scm
-          docker.build("angular-adv2", "-f Dockerfile.tiny ./")
+        checkout scm
+        sh "docker rm --force ${env.APP_NAME}"
+        sh "docker rmi --force ${env.APP_NAME}"
+        sh "docker build -t ${env.APP_NAME} -f -f Dockerfile.tiny ./"
+        sh "docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}"
       }
     }
 
