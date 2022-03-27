@@ -7,7 +7,7 @@ node {
   def SUB_DOMAINE = 'angular'
   def APP_PORT = '4000'
 
-  def DOCKER_FILE_NAME = 'Dockerfile.tiny'
+  def DOCKER_FILE_NAME = 'Dockerfile'
 
   def app
 
