@@ -34,7 +34,7 @@ node {
       --label traefik.enable=true \
       --label traefik.http.routers.${APP_NAME}.tls=true \
       --label traefik.http.routers.${APP_NAME}.tls.certresolver=letsencrypt \
-      --label traefik.http.routers.${APP_NAME}.rule="Host(`${SUB_DOMAINE}"."${DOMAINE}`)" \
+      --label traefik.http.routers.${APP_NAME}.rule='Host(`${SUB_DOMAINE}.${DOMAINE}`)' \
       --label traefik.http.services.${APP_NAME}.loadbalancer.server.port=${APP_PORT} \
       --name ${APP_NAME} \
       ${APP_NAME}"""
