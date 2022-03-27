@@ -13,14 +13,14 @@ node {
 
     stage('Cloning Git') {
       def commit = checkout scm
-
-      sh "echo ${commit}"
+      //  env.BRANCH_NAME = commit.GIT_BRANCH.replace('origin/', '')
+      // sh "echo ${commit}"
     }
 
     stage('Building image') {
       app = docker.build("angular-adv", "-f ${DOCKER_FILE_NAME} ./")
 
-      sh "echo ${app}"
+      // sh "echo ${app}"
     }
 
     stage('Docker Run') {
@@ -28,7 +28,7 @@ node {
       sh "docker rmi --force ${env.APP_NAME}"
       // sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
 
-      sudo """docker run -d \
+      sh """docker run -d \
       --restart unless-stopped \
       --network proxy \
       --label traefik.enable=true \
