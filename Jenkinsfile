@@ -18,7 +18,7 @@ node {
     }
 
     stage('Building image') {
-      app = docker.build("${APP_NAME}", "-f ${DOCKER_FILE_NAME} ./")
+      app = docker.build("${APP_NAME}", "-t ${env.APP_NAME} -f ${DOCKER_FILE_NAME} ./")
 
       // sh "echo ${app}"
     }
