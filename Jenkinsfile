@@ -24,7 +24,7 @@ pipeline {
     stage('Building image') {
       steps{
           checkout scm
-          def customImage = docker.build("angular-adv2", "-f Dockerfile.tiny ./")
+          docker.build("angular-adv2", "-f Dockerfile.tiny ./")
       }
     }
 
