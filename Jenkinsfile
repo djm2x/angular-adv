@@ -1,6 +1,7 @@
 node {
+  def APP_NAME = 'angular-adv'
   env {
-      APP_NAME = 'angular-adv'
+      // APP_NAME = 'angular-adv'
       DOMAINE = 'mohamed-mourabit.com'
       DOMAINE_PREFIX = ''
       SUB_DOMAINE = 'angular'
@@ -21,7 +22,10 @@ node {
       app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      sh "echo ${env.APP_NAME}"
+      env.setProperty(APP_NAME = 'angular-adv2')
+
+      sh "echo ${APP_NAME}"
+      sh "echo ${DOMAINE}"
       sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
     }
 }
