@@ -14,13 +14,13 @@ pipeline {
       TOKEN = 'github-token'
   }
   stages {
-    stage('Cloning Git') {
-      // steps {
-      //   git([url: "https://github.com/${env.GIT_REPO}.git", branch: "${env.BRANCH}", credentialsId: "${env.TOKEN}"])
+    // stage('Cloning Git') {
+    //   steps {
+    //     git([url: "https://github.com/${env.GIT_REPO}.git", branch: "${env.BRANCH}", credentialsId: "${env.TOKEN}"])
 
-      // }
-      checkout scm
-    }
+    //   }
+    //   checkout scm
+    // }
     stage('Building image') {
       steps{
           checkout scm
