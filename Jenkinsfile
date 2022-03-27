@@ -16,9 +16,10 @@ node {
       checkout scm
     }
     stage('Building image') {
-      app = docker.build("${env.APP_NAME}", "-f ${env.DOCKER_FILE_NAME} ./")
+      app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      app.withRun("docker run -d --name ${env.APP_NAME} --restart=unless-stopped -p ${env.APP_PORT}:${env.APP_PORT} ${env.APP_NAME}")
+      app.withRun("docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv")
     }
 }
+
