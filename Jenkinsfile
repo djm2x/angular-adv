@@ -21,7 +21,7 @@ node {
       app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      sh "${env.APP_NAME}"
+      sh "echo ${env.APP_NAME}"
       sh "docker run -d --name angular-adv --restart=unless-stopped -p 4000:4000 angular-adv"
     }
 }
