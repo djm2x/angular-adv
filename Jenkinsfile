@@ -22,7 +22,7 @@ node {
       app = docker.build("angular-adv", "-f Dockerfile.tiny ./")
     }
     stage('Docker Run') {
-      env.setProperty(APP_NAME = 'angular-adv2')
+      // env.setProperty(APP_NAME = 'angular-adv2')
 
       sh "echo ${APP_NAME}"
       // sh "echo ${DOMAINE}"
