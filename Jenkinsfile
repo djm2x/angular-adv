@@ -1,7 +1,7 @@
 #!groovy
 
 pipeline {
-  // agent none
+  agent { dockerfile true }
   environment {
       APP_NAME = 'angular-adv'
       DOMAINE = 'mohamed-mourabit.com'
